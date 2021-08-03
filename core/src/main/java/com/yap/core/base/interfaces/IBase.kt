@@ -1,4 +1,4 @@
-package com.yap.core.base
+package com.yap.core.base.interfaces
 
 import androidx.lifecycle.MutableLiveData
 
@@ -9,7 +9,7 @@ interface IBase {
 
     interface ViewModel<S : State> :
         ILifecycle {
-        val state: S
+        val viewState: S
     }
 
     interface State {

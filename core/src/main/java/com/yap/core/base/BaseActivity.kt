@@ -9,8 +9,8 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
-import androidx.lifecycle.Observer
 import com.yap.core.R
+import com.yap.core.base.interfaces.IBase
 import com.yap.core.extensions.toast
 
 
@@ -18,9 +18,10 @@ import com.yap.core.extensions.toast
 Created by Faheem Riaz on 02/08/2021.
  **/
 
-abstract class BaseActivity<T : ViewDataBinding, V : IBase.ViewModel<*>> : IBase.View<V>,
+abstract class BaseActivity<VB : ViewDataBinding, VS : IBase.State, VM : IBase.ViewModel<VS>> :
+    IBase.View<VM>,
     AppCompatActivity() {
-    lateinit var binding: T
+    lateinit var mViewBinding: VB
     private var progress: Dialog? = null
 
     @LayoutRes
@@ -28,13 +29,43 @@ abstract class BaseActivity<T : ViewDataBinding, V : IBase.ViewModel<*>> : IBase
 
     abstract fun getBindingVariable(): Int
 
+    /**
+     * Gets called right before the UI initialization.
+     */
+    protected open fun preInit(savedInstanceState: Bundle?) {
+        //
+    }
+
+    /**
+     * Get's called when it's the right time for you to initialize the UI elements.
+     *
+     * @param savedInstanceState state bundle brought from the [android.app.Activity.onCreate]
+     */
+    protected open fun init(savedInstanceState: Bundle?) {
+        //
+    }
+
+    /**
+     * Gets called right after the UI executePendingBindings.
+     */
+    protected open fun postExecutePendingBindings(savedInstanceState: Bundle?) {
+        //
+    }
+
+    /**
+     * Gets called right after the UI initialization.
+     */
+    protected open fun postInit() {
+        //
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         progress = createProgressDialog(this)
         registerStateListeners()
-        performDataBinding()
+        performDataBinding(savedInstanceState)
 
-        viewModel.state.viewState.observe(this, Observer {
+        viewModel.viewState.viewState.observe(this, {
             it?.let {
                 when (it) {
                     is String -> {
@@ -65,10 +96,13 @@ abstract class BaseActivity<T : ViewDataBinding, V : IBase.ViewModel<*>> : IBase
         return dialog
     }
 
-    private fun performDataBinding() {
-        binding = DataBindingUtil.setContentView(this, getLayoutId())
-        binding.setVariable(getBindingVariable(), viewModel)
-        binding.executePendingBindings()
+    private fun performDataBinding(savedInstanceState: Bundle?) {
+        mViewBinding = DataBindingUtil.setContentView(this, getLayoutId())
+        mViewBinding.setVariable(getBindingVariable(), viewModel)
+        init(savedInstanceState)
+        postInit()
+        mViewBinding.executePendingBindings()
+        postExecutePendingBindings(savedInstanceState)
     }
 
 
@@ -85,7 +119,7 @@ abstract class BaseActivity<T : ViewDataBinding, V : IBase.ViewModel<*>> : IBase
     override fun onDestroy() {
         progress?.dismiss()
         unregisterStateListeners()
-        viewModel.state.viewState.removeObservers(this)
+        viewModel.viewState.viewState.removeObservers(this)
         super.onDestroy()
     }
 

@@ -1,4 +1,4 @@
-package com.yap.core.base
+package com.yap.core.base.interfaces
 
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner

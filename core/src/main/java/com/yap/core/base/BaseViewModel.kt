@@ -1,6 +1,8 @@
 package com.yap.core.base
 
 import androidx.lifecycle.*
+import com.yap.core.base.interfaces.IBase
+import com.yap.core.base.interfaces.ILifecycle
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
