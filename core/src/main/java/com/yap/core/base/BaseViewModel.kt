@@ -1,5 +1,6 @@
 package com.yap.core.base
 
+import android.view.View
 import androidx.lifecycle.*
 import com.yap.core.base.interfaces.IBase
 import com.yap.core.base.interfaces.ILifecycle
@@ -27,6 +28,9 @@ abstract class BaseViewModel<S : IBase.State> : ViewModel(),
             block()
         }
 
+    fun onClick(view: View) {
+        clickEvent.setValue(view.id)
+    }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     override fun onCreate() {

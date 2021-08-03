@@ -12,6 +12,7 @@ import androidx.databinding.ViewDataBinding
 import com.yap.core.R
 import com.yap.core.base.interfaces.IBase
 import com.yap.core.extensions.toast
+import com.yap.core.networkX.showNetworkXSnackBarFire
 
 
 /**
@@ -64,7 +65,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VS : IBase.State, VM : IBase.V
         progress = createProgressDialog(this)
         registerStateListeners()
         performDataBinding(savedInstanceState)
-
+        showNetworkXSnackBarFire()
         viewModel.viewState.viewState.observe(this, {
             it?.let {
                 when (it) {
@@ -112,7 +113,7 @@ abstract class BaseActivity<VB : ViewDataBinding, VS : IBase.State, VM : IBase.V
         }
     }
 
-    private fun showLoader(isVisible: Boolean) {
+    fun showLoader(isVisible: Boolean) {
         if (isVisible) progress?.show() else progress?.dismiss()
     }
 
