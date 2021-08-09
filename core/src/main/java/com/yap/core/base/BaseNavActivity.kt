@@ -6,6 +6,7 @@ import androidx.annotation.IdRes
 import androidx.annotation.NavigationRes
 import androidx.databinding.ViewDataBinding
 import androidx.navigation.*
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.yap.core.R
 import com.yap.core.base.interfaces.IBase
