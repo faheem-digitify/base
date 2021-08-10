@@ -1,9 +1,9 @@
 plugins {
+    `maven-publish`
     id(BuildPluginsConfig.androidLibrary)
     kotlin(BuildPluginsConfig.kotlinAndroid)
     kotlin(BuildPluginsConfig.kotlinKapt)
 }
-
 android {
     compileSdk  = (BuildAndroidConfig.COMPILE_SDK_VERSION)
 
@@ -46,4 +46,16 @@ dependencies {
     implementation(ThirdPartyDependencies.TIMBER)
     implementation("androidx.navigation:navigation-runtime-ktx:2.3.5")
     implementation("androidx.navigation:navigation-fragment-ktx:2.3.5")
+    implementation("com.github.dcendents:android-maven-gradle-plugin:2.1")
+
+}
+
+project.afterEvaluate {
+    publishing {
+        publications {
+            val mavenJava by creating(MavenPublication::class) {
+                from(components["release"])
+            }
+        }
+    }
 }
